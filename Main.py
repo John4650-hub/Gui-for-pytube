@@ -5,7 +5,6 @@ from PIL import ImageTk, Image
 from pytube import YouTube
 import time
 import textwrap
-import re
 
 # UI of the program
 color = 'grey'
@@ -74,8 +73,8 @@ show_status = ttk.Label(frame1,
 )
 show_status.grid(row=3, column=0, sticky= tk.W)
 
-processes = tk.StringVar()
-show_status_widget = ttk.Label(frame1,background="white", foreground = "black",width=60,textvariable = processes)
+
+show_status_widget = ttk.Label(frame1,background="white", foreground = "black",width=60)
 show_status_widget.grid(row=4, 
     columnspan=3, 
     padx=0, 
@@ -85,7 +84,7 @@ show_status_widget.grid(row=4,
 downloadBtn = tk.Button(frame1, text="Download Video",
     width=15,
     relief = rf,
-    command=lambda:print(startDownload())
+    command=lambda:startDownload()
 )
 downloadBtn.grid(row=7, 
     columnspan=3, 
@@ -105,7 +104,7 @@ frame2.grid(row=3,
     sticky = tk.N
 )
 
-# this is where the user can get and shoose a quality 
+# this is where the user can go and choose a quality 
 lislab = ttk.Label(frame2,
     text = 'Choose the quality'
 )
@@ -119,7 +118,7 @@ lisbox = tk.Listbox(
 )
 lisbox.grid(row = 2,column=0)
 
-# this will go under the hood and get the qualities from the api
+# this will go under the hood and get the qualities from the youtube
 show_videoQuality = tk.Button(frame2,text= "Get video quality", command = lambda: video_quality())
 show_videoQuality.grid(row=3,column=0)
 # still in development
@@ -127,7 +126,6 @@ progressbar = ttk.Progressbar(frame2)
 progressbar.grid(row=4,column=0, pady= 30)
 
 #  Pytube logic
-
 
 def video_quality():
     ''' Gets the quality of a video and binds it to the list and inserts it into the list'''
@@ -143,7 +141,7 @@ def video_quality():
     	  y = m[1]
     	  sizev = v.filesize * (9.5367431640625*10**-7)
     	  vs = round(sizev,2)
-    	  lisbox.insert(tk.END,f'  {y} ==> size: {(vs)}mb')
+    	  lisbox.insert(tk.END,f'{y} ==> size: {(vs)}mb')
 
 
 def startDownload():
@@ -158,12 +156,17 @@ def startDownload():
         show_status_widget.configure(text="By default, am gonna get you the highest resolution video")
         time.sleep(1.5)
         justDownload = yt.streams.get_highest_resolution()
-        show_status_widget.configure(text="downloading . . .")
+        show_status_widget.configure( text = "downloading . . .")
+        time.sleep(1.5)
         show_status_widget.configure(text = f"video downloaded in {justDownload.download()}")
       else: 
-        usrSelection = lisbox.get(lisbox.curselection,last = None)
-        intialization = yt.streams.get_by_itag(usrSelection)
-        show_status_widget.configure(text="downloading . . .")
+        choice = lisbox.get(lisbox.curselection(),last = None)
+        
+        decoded_choice = choice[6:8]
+        
+        intialization = yt.streams.get_by_itag(int(decoded_choice))
+        show_status_widget.configure(text = "downloading . . .")
+        time.sleep(1.5)
         show_status_widget.configure(text = f"video downloaded in {intialization.download()}")
       
 
