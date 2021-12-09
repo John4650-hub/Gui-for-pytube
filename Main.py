@@ -1,4 +1,3 @@
-import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import ImageTk, Image
@@ -153,21 +152,16 @@ def startDownload():
       messagebox.showwarning('warning',textwrap.fill('Please check internet connection and try again also check that you have pasted the url correctly.',width =40))
     else:
       if lisbox.curselection() ==  ():
-        show_status_widget.configure(text="By default, am gonna get you the highest resolution video")
-        time.sleep(1.5)
         justDownload = yt.streams.get_highest_resolution()
-        show_status_widget.configure( text = "downloading . . .")
-        time.sleep(1.5)
-        show_status_widget.configure(text = f"video downloaded in {justDownload.download()}")
-      else: 
+        show_status_widget.configure(text = f"video saved at {justDownload.download()}")
+      else:
         choice = lisbox.get(lisbox.curselection(),last = None)
         
         decoded_choice = choice[6:8]
         
         intialization = yt.streams.get_by_itag(int(decoded_choice))
-        show_status_widget.configure(text = "downloading . . .")
-        time.sleep(1.5)
-        show_status_widget.configure(text = f"video downloaded in {intialization.download()}")
+        show_status_widget.configure(text = f"video saved at {intialization.download()}")
       
 
 win.mainloop()
+#https://youtu.be/tPEE9ZwTmy0q
